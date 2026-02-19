@@ -42,3 +42,8 @@ pytest-cov>=4.0.0
 black>=23.0.0
 flake8>=6.0.0
 mypy>=1.0.0
+
+# YouTube相关
+youtube-search>=2.1.0
+youtube-transcript-api>=0.6.0
+yt-dlp>=2023.0.0
