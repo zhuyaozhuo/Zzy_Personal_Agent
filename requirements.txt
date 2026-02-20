@@ -47,3 +47,4 @@ mypy>=1.0.0
 youtube-search>=2.1.0
 youtube-transcript-api>=0.6.0
 yt-dlp>=2023.0.0
+google-api-python-client>=2.0.0
