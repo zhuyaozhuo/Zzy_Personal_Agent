@@ -32,32 +32,47 @@ def test_api_key():
     print(f"✅ API密钥已配置: {api_key[:10]}...{api_key[-10:]}")
     
     try:
-        from googleapiclient.discovery import build
+        import requests
         
         print("\n📡 测试API连接...")
-        youtube = build('youtube', 'v3', developerKey=api_key)
         
-        request = youtube.search().list(
-            part='snippet',
-            q='Python',
-            maxResults=3,
-            type='video'
-        )
-        response = request.execute()
+        url = f"https://www.googleapis.com/youtube/v3/search"
+        params = {
+            'part': 'snippet',
+            'q': 'Python',
+            'maxResults': 3,
+            'type': 'video',
+            'key': api_key
+        }
         
-        print(f"✅ API连接成功！找到 {len(response['items'])} 个视频\n")
+        response = requests.get(url, params=params, timeout=30)
         
-        for i, item in enumerate(response['items'], 1):
-            title = item['snippet']['title']
-            channel = item['snippet']['channelTitle']
-            print(f"{i}. {title}")
-            print(f"   频道: {channel}\n")
+        if response.status_code == 200:
+            data = response.json()
+            print(f"✅ API连接成功！找到 {len(data['items'])} 个视频\n")
+            
+            for i, item in enumerate(data['items'], 1):
+                title = item['snippet']['title']
+                channel = item['snippet']['channelTitle']
+                print(f"{i}. {title}")
+                print(f"   频道: {channel}\n")
+            
+            print("="*60)
+            print("✅ YouTube API 配置成功！")
+            print("="*60)
+            return True
+        else:
+            print(f"\n❌ API请求失败: HTTP {response.status_code}")
+            print(f"错误信息: {response.text[:200]}")
+            return False
         
-        print("="*60)
-        print("✅ YouTube API 配置成功！")
-        print("="*60)
-        return True
-        
+    except requests.exceptions.Timeout:
+        print("\n❌ API连接超时")
+        print("\n可能的原因：")
+        print("1. 网络连接问题（需要科学上网）")
+        print("2. API服务器响应慢")
+        print("\n请检查网络连接或使用备用方案")
+        return False
     except Exception as e:
         print(f"\n❌ API连接失败: {e}")
         print("\n可能的原因：")

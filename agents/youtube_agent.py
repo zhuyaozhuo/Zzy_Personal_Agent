@@ -194,44 +194,116 @@ class YouTubeAgent:
             logger.error(f"获取视频详情失败: {e}")
             return {"success": False, "error": str(e)}
     
-    def _get_video_transcript(self, video_id: str) -> Dict[str, Any]:
+    def _list_available_transcripts(self, video_id: str) -> Dict[str, Any]:
         """
-        获取视频字幕/转录文本
+        列出视频可用的字幕语言
         
         Args:
             video_id: YouTube视频ID
         
         Returns:
-            转录文本
+            可用字幕语言列表
         """
-        logger.info(f"获取视频字幕: {video_id}")
+        logger.info(f"列出可用字幕语言: {video_id}")
         
         try:
             from youtube_transcript_api import YouTubeTranscriptApi
             
-            transcript_list = YouTubeTranscriptApi.get_transcript(
-                video_id,
-                languages=['zh-CN', 'zh-TW', 'en']
-            )
+            api = YouTubeTranscriptApi()
+            transcript_list = api.list(video_id)
             
-            full_text = " ".join([item["text"] for item in transcript_list])
+            available_languages = []
+            
+            for transcript in transcript_list:
+                lang_code = transcript.language_code
+                lang_name = transcript.language
+                is_generated = transcript.is_generated
+                is_translatable = transcript.is_translatable
+                
+                available_languages.append({
+                    "code": lang_code,
+                    "name": lang_name,
+                    "is_generated": is_generated,
+                    "is_translatable": is_translatable
+                })
+            
+            logger.info(f"找到 {len(available_languages)} 种可用字幕语言")
+            return {
+                "success": True,
+                "video_id": video_id,
+                "languages": available_languages
+            }
+            
+        except Exception as e:
+            logger.error(f"列出字幕语言失败: {e}")
+            return {"success": False, "error": str(e)}
+    
+    def _get_video_transcript(
+        self, 
+        video_id: str, 
+        language: str = "en",
+        auto_sentence_break: bool = True
+    ) -> Dict[str, Any]:
+        """
+        获取视频字幕/转录文本
+        
+        Args:
+            video_id: YouTube视频ID
+            language: 字幕语言代码 (en, zh-CN, zh-TW等)
+            auto_sentence_break: 是否自动断句
+        
+        Returns:
+            转录文本
+        """
+        logger.info(f"获取视频字幕: {video_id}, 语言: {language}")
+        
+        try:
+            from youtube_transcript_api import YouTubeTranscriptApi
+            
+            api = YouTubeTranscriptApi()
+            
+            language_map = {
+                "中文": ["zh-CN", "zh-Hans", "zh-TW", "zh-Hant", "zh"],
+                "英文": ["en", "en-US", "en-GB"],
+                "英文自动": ["en"],
+                "中文繁体": ["zh-TW", "zh-Hant"],
+                "中文简体": ["zh-CN", "zh-Hans"]
+            }
+            
+            if language in language_map:
+                lang_codes = language_map[language]
+            else:
+                lang_codes = [language]
+            
+            transcript_list = api.fetch(video_id, lang_codes)
+            
+            raw_text = " ".join([item.text for item in transcript_list])
             
             transcript_with_timestamps = [
                 {
-                    "start": item["start"],
-                    "duration": item.get("duration", 0),
-                    "text": item["text"]
+                    "start": item.start,
+                    "duration": getattr(item, 'duration', 0),
+                    "text": item.text
                 }
                 for item in transcript_list
             ]
             
-            logger.info(f"获取字幕成功，长度: {len(full_text)}")
+            if auto_sentence_break:
+                full_text = self._auto_sentence_break(raw_text)
+            else:
+                full_text = raw_text
+            
+            detected_lang = self._detect_language(full_text[:500])
+            
+            logger.info(f"获取字幕成功，长度: {len(full_text)}, 语言: {detected_lang}")
             return {
                 "success": True,
                 "video_id": video_id,
                 "full_text": full_text,
+                "raw_text": raw_text,
                 "transcript": transcript_with_timestamps,
-                "language": transcript_list[0].get("language", "unknown") if transcript_list else "unknown"
+                "language": detected_lang,
+                "language_code": lang_codes[0] if lang_codes else language
             }
             
         except ImportError:
@@ -240,6 +312,48 @@ class YouTubeAgent:
         except Exception as e:
             logger.error(f"获取字幕失败: {e}")
             return {"success": False, "error": str(e)}
+    
+    def _auto_sentence_break(self, text: str) -> str:
+        """
+        自动断句处理
+        
+        Args:
+            text: 原始文本
+        
+        Returns:
+            断句后的文本
+        """
+        import re
+        
+        text = re.sub(r'\s+', ' ', text)
+        
+        text = re.sub(r'([.!?])\s+', r'\1\n\n', text)
+        
+        text = re.sub(r'([。！？])', r'\1\n\n', text)
+        
+        text = re.sub(r'([,，])\s*', r'\1 ', text)
+        
+        text = re.sub(r'\n{3,}', '\n\n', text)
+        
+        return text.strip()
+    
+    def _detect_language(self, text: str) -> str:
+        """
+        检测文本语言
+        
+        Args:
+            text: 文本内容
+        
+        Returns:
+            语言名称
+        """
+        chinese_chars = sum(1 for char in text if '\u4e00' <= char <= '\u9fff')
+        total_chars = len(text.replace(' ', ''))
+        
+        if total_chars > 0 and chinese_chars / total_chars > 0.3:
+            return "中文"
+        else:
+            return "英文"
     
     def _summarize_video(
         self,
@@ -425,8 +539,12 @@ class YouTubeAgent:
         except:
             return 0
     
-    def _format_number(self, num: int) -> str:
+    def _format_number(self, num) -> str:
         """格式化数字显示"""
+        if num is None:
+            return "N/A"
+        if not isinstance(num, (int, float)):
+            return str(num)
         if num >= 10000000:
             return f"{num/10000000:.1f}千万"
         elif num >= 10000:
