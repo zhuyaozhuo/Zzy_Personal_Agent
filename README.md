@@ -56,6 +56,18 @@ cp .env.example .env
 # 编辑 .env 文件，填入你的API密钥
 ```
 
+### ⚠️ 安全注意事项
+
+**所有包含敏感信息的 API Key 必须放在 `.env` 文件中，严禁硬编码在代码中！**
+
+- `.env` 文件已添加到 `.gitignore`，不会提交到 Git
+- 复制 `.env.example` 为 `.env` 并填入你的密钥
+- 需要配置的环境变量包括：
+  - `SILICONFLOW_API_KEY` - 硅基流动 API Key（推荐）
+  - `OPENAI_API_KEY` - OpenAI API Key（备选）
+  - `BILIBILI_SESSDATA` - B站 Cookie（用于获取AI字幕）
+  - 其他服务密钥（如需要）
+
 ### 5. 启动服务
 
 ```bash

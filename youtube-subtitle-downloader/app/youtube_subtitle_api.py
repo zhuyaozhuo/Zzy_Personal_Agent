@@ -430,8 +430,8 @@ def generate_gpt_summary(text, fallback_points):
         if not api_key:
             return fallback_points
         
-        # 截取文本前10000字符
-        text_sample = text[:10000]
+        # 截取文本前8000字符（减少以提高响应速度）
+        text_sample = text[:8000]
         
         prompt = f"""你是一个专业的知识提炼专家。请分析以下视频字幕内容，提取6-8个核心观点。
 
@@ -474,31 +474,43 @@ def generate_gpt_summary(text, fallback_points):
             'max_tokens': 1000
         }
         
-        response = requests.post(
-            f'{base_url}/chat/completions',
-            headers=headers,
-            json=data,
-            timeout=60
-        )
-        
-        if response.status_code == 200:
-            result = response.json()
-            content = result['choices'][0]['message']['content']
-            
-            # 解析AI输出
-            points = []
-            for line in content.split('\n'):
-                line = line.strip()
-                if line and (line[0].isdigit() or line.startswith('-') or line.startswith('•')):
-                    # 去掉序号
-                    cleaned = re.sub(r'^[0-9]+[.、)\]】\s]+', '', line)
-                    cleaned = re.sub(r'^[-•]\s*', '', cleaned)
-                    cleaned = cleaned.strip()
-                    if cleaned and len(cleaned) > 10:
-                        points.append(cleaned)
-            
-            if points:
-                return points[:8]
+        # 添加重试机制
+        max_retries = 3
+        for attempt in range(max_retries):
+            try:
+                response = requests.post(
+                    f'{base_url}/chat/completions',
+                    headers=headers,
+                    json=data,
+                    timeout=120
+                )
+                
+                if response.status_code == 200:
+                    result = response.json()
+                    content = result['choices'][0]['message']['content']
+                    
+                    # 解析AI输出
+                    points = []
+                    for line in content.split('\n'):
+                        line = line.strip()
+                        if line and (line[0].isdigit() or line.startswith('-') or line.startswith('•')):
+                            # 去掉序号
+                            cleaned = re.sub(r'^[0-9]+[.、)\]】\s]+', '', line)
+                            cleaned = re.sub(r'^[-•]\s*', '', cleaned)
+                            cleaned = cleaned.strip()
+                            if cleaned and len(cleaned) > 10:
+                                points.append(cleaned)
+                    
+                    if points:
+                        return points[:8]
+                break
+            except Exception as e:
+                if attempt < max_retries - 1:
+                    print(f"AI summary attempt {attempt + 1} failed, retrying: {e}")
+                    import time
+                    time.sleep(2)
+                else:
+                    raise e
         
         return fallback_points
     except Exception as e:
