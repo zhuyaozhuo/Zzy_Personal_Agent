@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025黄金走势深度分析 | 影响金价的五大因素</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/framer-motion/11.0.3/framer-motion.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: #0a0a0f;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        
+        .gradient-gold {
+            background: linear-gradient(135deg, #ffd700, #ffb700, #ffa500, #ff8c00);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gold-shimmer 3s ease infinite;
+        }
+        
+        @keyframes gold-shimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .glow-gold {
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.4), 0 0 80px rgba(255, 215, 0, 0.2);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 215, 0, 0.15);
+        }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            padding: 40px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .bento-item {
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .bento-item:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+        
+        .hero-section {
+            grid-column: span 4;
+            background: linear-gradient(135deg, #1a1a2e 0%, #2d1f0f 50%, #1a1a2e 100%);
+            min-height: 450px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.08) 0%, transparent 50%);
+            animation: rotate 30s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .price-card {
+            grid-column: span 1;
+            min-height: 280px;
+        }
+        
+        .factor-card {
+            grid-column: span 2;
+            min-height: 350px;
+        }
+        
+        .factor-small {
+            grid-column: span 1;
+            min-height: 280px;
+        }
+        
+        .chart-section {
+            grid-column: span 4;
+        }
+        
+        .timeline-section {
+            grid-column: span 4;
+        }
+        
+        .forecast-section {
+            grid-column: span 2;
+        }
+        
+        .source-section {
+            grid-column: span 4;
+        }
+        
+        @media (max-width: 1200px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero-section, .chart-section, .timeline-section, .source-section { grid-column: span 2; }
+            .factor-card, .forecast-section { grid-column: span 2; }
+            .price-card, .factor-small { grid-column: span 1; }
+        }
+        
+        @media (max-width: 768px) {
+            .bento-grid { grid-template-columns: 1fr; padding: 20px; }
+            .hero-section, .price-card, .factor-card, .factor-small, .chart-section, .timeline-section, .forecast-section, .source-section { grid-column: span 1; }
+        }
+        
+        .gold-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: float-up 8s infinite;
+            opacity: 0.6;
+        }
+        
+        @keyframes float-up {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+        }
+        
+        .trend-up {
+            color: #22c55e;
+        }
+        
+        .trend-down {
+            color: #ef4444;
+        }
+        
+        .pulse-gold {
+            width: 12px;
+            height: 12px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.7); }
+            50% { transform: scale(1.2); box-shadow: 0 0 20px 10px rgba(255, 215, 0, 0); }
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #ffb700);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+        
+        .number-count {
+            font-variant-numeric: tabular-nums;
+        }
+    </style>
+</head>
+<body>
+    <div class="bento-grid">
+        <!-- Hero Section -->
+        <div class="bento-item hero-section glass-card glow-gold">
+            <div class="gold-particles">
+                <div class="particle" style="left: 10%; animation-delay: 0s;"></div>
+                <div class="particle" style="left: 20%; animation-delay: 2s;"></div>
+                <div class="particle" style="left: 30%; animation-delay: 4s;"></div>
+                <div class="particle" style="left: 40%; animation-delay: 1s;"></div>
+                <div class="particle" style="left: 50%; animation-delay: 3s;"></div>
+                <div class="particle" style="left: 60%; animation-delay: 5s;"></div>
+                <div class="particle" style="left: 70%; animation-delay: 2.5s;"></div>
+                <div class="particle" style="left: 80%; animation-delay: 4.5s;"></div>
+                <div class="particle" style="left: 90%; animation-delay: 1.5s;"></div>
+            </div>
+            <div class="relative z-10 p-12 h-full flex flex-col justify-center items-center text-center">
+                <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+                    <div class="flex items-center gap-4 mb-6">
+                        <span class="pulse-gold"></span>
+                        <span class="text-yellow-400 font-orbitron text-sm tracking-widest">2025 GOLD MARKET ANALYSIS</span>
+                        <span class="pulse-gold"></span>
+                    </div>
+                    <h1 class="font-orbitron text-5xl md:text-7xl font-black mb-6 gradient-gold">黄金走势深度分析</h1>
+                    <p class="text-xl text-gray-300 max-w-3xl mb-8">
+                        探究2025年金价暴涨背后的五大核心驱动因素<br>
+                        <span class="text-yellow-400">从央行购金到地缘政治，全面解读黄金牛市密码</span>
+                    </p>
+                    <div class="flex gap-6 justify-center flex-wrap">
+                        <div class="glass-card px-6 py-3 rounded-full">
+                            <span class="text-3xl font-orbitron font-bold text-yellow-400">+20%</span>
+                            <span class="text-gray-400 ml-2">年内涨幅</span>
+                        </div>
+                        <div class="glass-card px-6 py-3 rounded-full">
+                            <span class="text-3xl font-orbitron font-bold text-yellow-400">$3732</span>
+                            <span class="text-gray-400 ml-2">美元/盎司</span>
+                        </div>
+                        <div class="glass-card px-6 py-3 rounded-full">
+                            <span class="text-3xl font-orbitron font-bold text-yellow-400">¥674</span>
+                            <span class="text-gray-400 ml-2">元/克</span>
+                        </div>
+                    </div>
+                </motion.div>
+            </div>
+        </div>
+
+        <!-- Current Price Cards -->
+        <div class="bento-item price-card glass-card">
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="p-8 h-full flex flex-col justify-center">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="fas fa-globe text-yellow-400 text-2xl"></i>
+                    <h3 class="font-orbitron text-xl font-bold">国际金价</h3>
+                </div>
+                <p class="text-5xl font-orbitron font-black gradient-gold mb-2">$3,732</p>
+                <p class="text-gray-400 text-sm mb-4">美元/盎司</p>
+                <div class="trend-up flex items-center gap-2">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>+20% 今年累计</span>
+                </div>
+            </motion.div>
+        </div>
+
+        <div class="bento-item price-card glass-card">
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="p-8 h-full flex flex-col justify-center">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="fas fa-coins text-yellow-400 text-2xl"></i>
+                    <h3 class="font-orbitron text-xl font-bold">国内金价</h3>
+                </div>
+                <p class="text-5xl font-orbitron font-black gradient-gold mb-2">¥674</p>
+                <p class="text-gray-400 text-sm mb-4">元/克</p>
+                <div class="trend-up flex items-center gap-2">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>历史新高区间</span>
+                </div>
+            </motion.div>
+        </div>
+
+        <div class="bento-item price-card glass-card">
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="p-8 h-full flex flex-col justify-center">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="fas fa-chart-line text-yellow-400 text-2xl"></i>
+                    <h3 class="font-orbitron text-xl font-bold">2024年涨幅</h3>
+                </div>
+                <p class="text-5xl font-orbitron font-black gradient-gold mb-2">+27%</p>
+                <p class="text-gray-400 text-sm mb-4">历史纪录</p>
+                <div class="trend-up flex items-center gap-2">
+                    <i class="fas fa-trophy"></i>
+                    <span>创历史最佳</span>
+                </div>
+            </motion.div>
+        </div>
+
+        <div class="bento-item price-card glass-card">
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.3 }} className="p-8 h-full flex flex-col justify-center">
+                <div class="flex items-center gap-3 mb-4">
+                    <i class="fas fa-university text-yellow-400 text-2xl"></i>
+                    <h3 class="font-orbitron text-xl font-bold">央行购金</h3>
+                </div>
+                <p class="text-5xl font-orbitron font-black gradient-gold mb-2">1500+</p>
+                <p class="text-gray-400 text-sm mb-4">吨/年</p>
+                <div class="trend-up flex items-center gap-2">
+                    <i class="fas fa-arrow-up"></i>
+                    <span>历史新高</span>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- Top 5 Factors -->
+        <div class="bento-item factor-card glass-card" style="grid-column: span 4;">
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="p-10">
+                <div class="text-center mb-10">
+                    <h2 class="font-orbitron text-4xl font-bold gradient-gold mb-4">影响金价的五大核心因素</h2>
+                    <p class="text-gray-400">基于2025年市场数据的深度分析</p>
+                </div>
+                
+                <div class="grid md:grid-cols-5 gap-6">
+                    <!-- Factor 1 -->
+                    <div class="glass-card rounded-2xl p-6 text-center hover:glow-gold transition">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
+                            <span class="font-orbitron text-3xl font-black text-yellow-400">1</span>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">央行购金潮</h3>
+                        <p class="text-sm text-gray-400 mb-4">全球央行持续增持黄金作为战略储备</p>
+                        <div class="progress-bar mb-2">
+                            <div class="progress-fill" style="width: 98%;"></div>
+                        </div>
+                        <p class="text-xs text-yellow-400">影响力: 98%</p>
+                    </div>
+                    
+                    <!-- Factor 2 -->
+                    <div class="glass-card rounded-2xl p-6 text-center hover:glow-gold transition">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
+                            <span class="font-orbitron text-3xl font-black text-yellow-400">2</span>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">美联储政策</h3>
+                        <p class="text-sm text-gray-400 mb-4">降息预期 vs 暂停降息的博弈</p>
+                        <div class="progress-bar mb-2">
+                            <div class="progress-fill" style="width: 90%;"></div>
+                        </div>
+                        <p class="text-xs text-yellow-400">影响力: 90%</p>
+                    </div>
+                    
+                    <!-- Factor 3 -->
+                    <div class="glass-card rounded-2xl p-6 text-center hover:glow-gold transition">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
+                            <span class="font-orbitron text-3xl font-black text-yellow-400">3</span>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">地缘政治风险</h3>
+                        <p class="text-sm text-gray-400 mb-4">俄乌冲突、中东局势持续动荡</p>
+                        <div class="progress-bar mb-2">
+                            <div class="progress-fill" style="width: 85%;"></div>
+                        </div>
+                        <p class="text-xs text-yellow-400">影响力: 85%</p>
+                    </div>
+                    
+                    <!-- Factor 4 -->
+                    <div class="glass-card rounded-2xl p-6 text-center hover:glow-gold transition">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
+                            <span class="font-orbitron text-3xl font-black text-yellow-400">4</span>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">美元走势</h3>
+                        <p class="text-sm text-gray-400 mb-4">美元指数回落支撑金价上行</p>
+                        <div class="progress-bar mb-2">
+                            <div class="progress-fill" style="width: 80%;"></div>
+                        </div>
+                        <p class="text-xs text-yellow-400">影响力: 80%</p>
+                    </div>
+                    
+                    <!-- Factor 5 -->
+                    <div class="glass-card rounded-2xl p-6 text-center hover:glow-gold transition">
+                        <div class="w-16 h-16 mx-auto mb-4 bg-yellow-500/20 rounded-2xl flex items-center justify-center">
+                            <span class="font-orbitron text-3xl font-black text-yellow-400">5</span>
+                        </div>
+                        <h3 class="font-bold text-lg mb-2">关税与贸易战</h3>
+                        <p class="text-sm text-gray-400 mb-4">特朗普关税政策引发避险情绪</p>
+                        <div class="progress-bar mb-2">
+                            <div class="progress-fill" style="width: 70%;"></div>
+                        </div>
+                        <p class="text-xs text-yellow-400">影响力: 70%</p>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- Factor Details -->
+        <div class="bento-item factor-small glass-card">
+            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6 }} className="p-6 h-full">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-university text-yellow-400"></i>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-lg">No.1 央行购金潮</h3>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">"央行购金行为仍是影响黄金市场的最重要因素，预计2025年及之后年份央行大额购金行为仍将持续。"</p>
+                <p class="text-xs text-gray-500 mb-4">— 中信证券首席经济学家 明明</p>
+                <ul class="text-sm space-y-2 text-gray-300">
+                    <li><i class="fas fa-check text-yellow-400 mr-2"></i>2025年全球央行购金超1500吨</li>
+                    <li><i class="fas fa-check text-yellow-400 mr-2"></i>中国连续16个月增持黄金</li>
+                    <li><i class="fas fa-check text-yellow-400 mr-2"></i>新兴市场央行持续多元化</li>
+                </ul>
+            </motion.div>
+        </div>
+
+        <div class="bento-item factor-small glass-card">
+            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.1 }} className="p-6 h-full">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-percentage text-yellow-400"></i>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-lg">No.2 美联储政策</h3>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">美联储降息预期通过降低持有黄金的机会成本和刺激全球需求，形成对黄金价格的双重利好。</p>
+                <ul class="text-sm space-y-2 text-gray-300">
+                    <li><i class="fas fa-arrow-down text-yellow-400 mr-2"></i>降息 → 持有成本下降</li>
+                    <li><i class="fas fa-arrow-down text-yellow-400 mr-2"></i>美元走弱 → 金价上涨</li>
+                    <li><i class="fas fa-balance-scale text-yellow-400 mr-2"></i>2025年预计降息1-2次</li>
+                </ul>
+            </motion.div>
+        </div>
+
+        <div class="bento-item factor-small glass-card">
+            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.2 }} className="p-6 h-full">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-globe-americas text-yellow-400"></i>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-lg">No.3 地缘政治</h3>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">地缘政治动荡直接触发黄金的避险属性，俄乌冲突、中东局势紧张等地缘事件都曾推动金价短期飙升。</p>
+                <ul class="text-sm space-y-2 text-gray-300">
+                    <li><i class="fas fa-exclamation-triangle text-yellow-400 mr-2"></i>俄乌冲突持续升级</li>
+                    <li><i class="fas fa-exclamation-triangle text-yellow-400 mr-2"></i>中东局势动荡</li>
+                    <li><i class="fas fa-exclamation-triangle text-yellow-400 mr-2"></i>避险需求持续升温</li>
+                </ul>
+            </motion.div>
+        </div>
+
+        <div class="bento-item factor-small glass-card">
+            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, delay: 0.3 }} className="p-6 h-full">
+                <div class="flex items-center gap-3 mb-4">
+                    <div class="w-12 h-12 bg-yellow-500/20 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-dollar-sign text-yellow-400"></i>
+                    </div>
+                    <h3 class="font-orbitron font-bold text-lg">No.4 美元走势</h3>
+                </div>
+                <p class="text-gray-400 text-sm mb-4">美元指数的走弱对黄金价格形成了重要支撑。黄金与美元通常呈负相关关系。</p>
+                <ul class="text-sm space-y-2 text-gray-300">
+                    <li><i class="fas fa-arrow-down text-yellow-400 mr-2"></i>美元指数回落</li>
+                    <li><i class="fas fa-arrow-up text-yellow-400 mr-2"></i>黄金需求上升</li>
+                    <li><i class="fas fa-exchange-alt text-yellow-400 mr-2"></i>负相关效应</li>
+                </ul>
+            </motion.div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="bento-item timeline-section glass-card">
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }} className="p-10">
+                <div class="text-center mb-10">
+                    <h2 class="font-orbitron text-3xl font-bold gradient-gold mb-4">2025年重大事件时间线</h2>
+                    <p class="text-gray-400">黄金价格与关键事件节点</p>
+                </div>
+                
+                <div class="relative">
+                    <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-yellow-500/50 via-yellow-400/50 to-yellow-500/50"></div>
+                    
+                    <div class="space-y-8">
+                        <div class="flex items-center gap-6">
+                            <div class="flex-1 text-right">
+                                <div class="glass-card rounded-2xl p-4 inline-block">
+                                    <p class="font-bold text-yellow-400">1月</p>
+                                    <p class="text-sm text-gray-300">年初避险情绪高涨</p>
+                                    <p class="text-xs text-gray-500">金价持续攀升</p>
+                                </div>
+                            </div>
+                            <div class="w-4 h-4 bg-yellow-500 rounded-full relative z-10"></div>
+                            <div class="flex-1"></div>
+                        </div>
+                        
+                        <div class="flex items-center gap-6">
+                            <div class="flex-1"></div>
+                            <div class="w-4 h-4 bg-yellow-500 rounded-full relative z-10"></div>
+                            <div class="flex-1">
+                                <div class="glass-card rounded-2xl p-4 inline-block">
+                                    <p class="font-bold text-yellow-400">2月</p>
+                                    <p class="text-sm text-gray-300">特朗普关税政策</p>
+                                    <p class="text-xs text-gray-500">避险需求激增</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-6">
+                            <div class="flex-1 text-right">
+                                <div class="glass-card rounded-2xl p-4 inline-block">
+                                    <p class="font-bold text-yellow-400">2月25日</p>
+                                    <p class="text-sm text-gray-300">摩根大通上调预期</p>
+                                    <p class="text-xs text-gray-500">2026年底6300美元</p>
+                                </div>
+                            </div>
+                            <div class="w-4 h-4 bg-yellow-500 rounded-full relative z-10"></div>
+                            <div class="flex-1"></div>
+                        </div>
+                        
+                        <div class="flex items-center gap-6">
+                            <div class="flex-1"></div>
+                            <div class="w-4 h-4 bg-yellow-500 rounded-full relative z-10"></div>
+                            <div class="flex-1">
+                                <div class="glass-card rounded-2xl p-4 inline-block">
+                                    <p class="font-bold text-yellow-400">Q3</p>
+                                    <p class="text-sm text-gray-300">央行购金220吨/季</p>
+                                    <p class="text-xs text-gray-500">历史高位</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center gap-6">
+                            <div class="flex-1 text-right">
+                                <div class="glass-card rounded-2xl p-4 inline-block">
+                                    <p class="font-bold text-yellow-400">2026年初</p>
+                                    <p class="text-sm text-gray-300">机构预测冲破5000</p>
+                                    <p class="text-xs text-gray-500">历史新高</p>
+                                </div>
+                            </div>
+                            <div class="w-4 h-4 bg-yellow-500 rounded-full relative z-10"></div>
+                            <div class="flex-1"></div>
+                        </div>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- Forecast -->
+        <div class="bento-item forecast-section glass-card glow-gold">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6 }} className="p-8">
+                <div class="text-center mb-6">
+                    <i class="fas fa-crystal-ball text-4xl text-yellow-400 mb-4"></i>
+                    <h2 class="font-orbitron text-2xl font-bold gradient-gold">未来1年走势预测</h2>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="glass-card rounded-2xl p-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-400">2025年底目标</span>
+                            <span class="font-orbitron font-bold text-yellow-400">$3,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 80%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card rounded-2xl p-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-400">2026年中预测</span>
+                            <span class="font-orbitron font-bold text-yellow-400">$4,000</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%;"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-card rounded-2xl p-4">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-gray-400">2026年底(摩根大通)</span>
+                            <span class="font-orbitron font-bold text-yellow-400">$6,300</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 p-4 bg-yellow-500/10 rounded-2xl border border-yellow-500/30">
+                    <p class="text-sm text-center text-gray-300">
+                        <i class="fas fa-quote-left text-yellow-400 mr-2"></i>
+                        2025年黄金市场大概率将维持弱势震荡上行
+                        <i class="fas fa-quote-right text-yellow-400 ml-2"></i>
+                    </p>
+                    <p class="text-xs text-center text-gray-500 mt-2">— 中国(香港)金融衍生品投资研究院院长 王红英</p>
+                </div>
+            </motion.div>
+        </div>
+
+        <div class="bento-item forecast-section glass-card">
+            <motion.div initial={{ opacity: 0, scale: 0.95 }} whileInView={{ opacity: 1, scale: 1 }} transition={{ duration: 0.6, delay: 0.1 }} className="p-8">
+                <div class="text-center mb-6">
+                    <i class="fas fa-building-columns text-4xl text-yellow-400 mb-4"></i>
+                    <h2 class="font-orbitron text-2xl font-bold">机构观点汇总</h2>
+                </div>
+                
+                <div class="space-y-4">
+                    <div class="glass-card rounded-2xl p-4">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fas fa-university text-cyan-400"></i>
+                            <span class="font-bold">摩根大通</span>
+                        </div>
+                        <p class="text-sm text-gray-400">2026年底 <span class="text-yellow-400 font-bold">$6,300</span> / 长期 $4,500</p>
+                    </div>
+                    
+                    <div class="glass-card rounded-2xl p-4">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fas fa-university text-green-400"></i>
+                            <span class="font-bold">高盛</span>
+                        </div>
+                        <p class="text-sm text-gray-400">2026年底 <span class="text-yellow-400 font-bold">$4,900</span></p>
+                    </div>
+                    
+                    <div class="glass-card rounded-2xl p-4">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fas fa-chart-line text-purple-400"></i>
+                            <span class="font-bold">BullionVault</span>
+                        </div>
+                        <p class="text-sm text-gray-400">2025年 <span class="text-yellow-400 font-bold">$3,000</span></p>
+                    </div>
+                    
+                    <div class="glass-card rounded-2xl p-4">
+                        <div class="flex items-center gap-3 mb-2">
+                            <i class="fas fa-bank text-orange-400"></i>
+                            <span class="font-bold">中信证券</span>
+                        </div>
+                        <p class="text-sm text-gray-400">央行购金将持续支撑金价上行</p>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- Sources -->
+        <div class="bento-item source-section glass-card">
+            <motion.div initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} transition={{ duration: 0.6 }} className="p-6 text-center">
+                <p class="text-gray-500 text-sm mb-3">
+                    <strong>数据来源:</strong>
+                    <a href="https://www.sohu.com/a/864910699_121976698" target="_blank" class="text-yellow-400 hover:underline mx-1">搜狐网</a>
+                    |
+                    <a href="https://www.sohu.com/a/900485105_121976698" target="_blank" class="text-yellow-400 hover:underline mx-1">搜狐财经</a>
+                    |
+                    <a href="http://m.toutiao.com/group/7611062988002427428/" target="_blank" class="text-yellow-400 hover:underline mx-1">今日头条</a>
+                    |
+                    <a href="https://www.sohu.com/a/904976270_121976698" target="_blank" class="text-yellow-400 hover:underline mx-1">搜狐财经</a>
+                </p>
+                <p class="text-gray-600 text-xs">
+                    数据截止2025年2月 | 投资有风险，入市需谨慎 | 本报告仅供研究参考，不构成投资建议
+                </p>
+            </motion.div>
+        </div>
+    </div>
+
+    <script>
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.bento-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        // Number counter animation
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                const value = Math.floor(progress * (end - start) + start);
+                element.textContent = value.toLocaleString();
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Page load animation
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+        });
+
+        document.body.style.opacity = '0';
+        document.body.style.transition = 'opacity 0.5s ease';
+    </script>
+</body>
+</html>

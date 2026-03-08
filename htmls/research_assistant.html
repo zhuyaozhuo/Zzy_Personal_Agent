@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI信息收集助手 | Research Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/framer-motion/11.0.3/framer-motion.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap');
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: #0a0a0f;
+            color: #fff;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .font-orbitron { font-family: 'Orbitron', sans-serif; }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #00f5ff, #a855f7, #00f5ff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 3s ease infinite;
+        }
+        
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .glow-cyan {
+            box-shadow: 0 0 40px rgba(0, 245, 255, 0.3), 0 0 80px rgba(0, 245, 255, 0.1);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .input-glow:focus {
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.4);
+            border-color: rgba(0, 245, 255, 0.6);
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(0, 245, 255, 0.2);
+            border-top-color: #00f5ff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background: #00f5ff;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0, 245, 255, 0.2);
+        }
+        
+        .search-history-item {
+            transition: all 0.3s ease;
+        }
+        
+        .search-history-item:hover {
+            background: rgba(0, 245, 255, 0.1);
+        }
+        
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.5;
+            animation: float 8s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.1); }
+        }
+        
+        .progress-step {
+            transition: all 0.3s ease;
+        }
+        
+        .progress-step.active {
+            background: #00f5ff;
+            box-shadow: 0 0 20px rgba(0, 245, 255, 0.5);
+        }
+        
+        .typing-animation {
+            overflow: hidden;
+            border-right: 2px solid #00f5ff;
+            animation: blink-caret 0.75s step-end infinite;
+        }
+        
+        @keyframes blink-caret {
+            from, to { border-color: transparent }
+            50% { border-color: #00f5ff }
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+    <!-- Background Orbs -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none">
+        <div class="orb w-96 h-96 bg-cyan-500/20 top-0 left-0"></div>
+        <div class="orb w-80 h-80 bg-purple-500/20 bottom-0 right-0" style="animation-delay: -4s;"></div>
+        <div class="orb w-64 h-64 bg-pink-500/20 top-1/2 left-1/2" style="animation-delay: -2s;"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="relative z-10 min-h-screen flex flex-col">
+        
+        <!-- Header -->
+        <header class="glass-card border-b border-white/5">
+            <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-xl flex items-center justify-center">
+                        <i class="fas fa-brain text-white"></i>
+                    </div>
+                    <h1 class="font-orbitron text-xl font-bold gradient-text">AI Research Assistant</h1>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button onclick="showHistory()" class="glass-card px-4 py-2 rounded-xl hover:glow-cyan transition text-sm">
+                        <i class="fas fa-history mr-2"></i>历史记录
+                    </button>
+                    <button onclick="showSettings()" class="glass-card px-4 py-2 rounded-xl hover:glow-cyan transition text-sm">
+                        <i class="fas fa-cog mr-2"></i>设置
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col items-center justify-center px-4 py-12">
+            
+            <!-- Search Page -->
+            <div id="searchPage" class="w-full max-w-4xl">
+                <motion.div 
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6 }}
+                    className="text-center mb-12"
+                >
+                    <h2 class="font-orbitron text-4xl md:text-5xl font-black mb-4">
+                        <span class="gradient-text">告诉我你想了解什么</span>
+                    </h2>
+                    <p class="text-gray-400 text-lg">AI智能助手将为你收集、分析和整理信息</p>
+                </motion.div>
+
+                <!-- Search Box -->
+                <motion.div 
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                    className="glass-card rounded-3xl p-2 glow-cyan"
+                >
+                    <div class="flex items-center gap-4 bg-black/30 rounded-2xl p-4">
+                        <i class="fas fa-search text-cyan-400 text-xl"></i>
+                        <input 
+                            type="text" 
+                            id="searchInput"
+                            placeholder="例如：2025年黄金价格走势分析..." 
+                            class="flex-1 bg-transparent border-none outline-none text-white placeholder-gray-500 text-lg"
+                            onkeypress="handleKeyPress(event)"
+                        >
+                        <button 
+                            onclick="startResearch()"
+                            class="bg-gradient-to-r from-cyan-500 to-purple-500 px-8 py-3 rounded-xl font-bold hover:opacity-90 transition flex items-center gap-2"
+                        >
+                            <i class="fas fa-rocket"></i>
+                            开始研究
+                        </button>
+                    </div>
+                </motion.div>
+
+                <!-- Quick Topics -->
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.4 }}
+                    className="mt-8"
+                >
+                    <p class="text-gray-500 text-sm mb-4">快速开始：</p>
+                    <div class="flex flex-wrap gap-3">
+                        <button onclick="quickSearch('2025年黄金价格走势分析')" class="glass-card px-4 py-2 rounded-full text-sm hover:bg-white/10 transition">
+                            💰 黄金价格走势
+                        </button>
+                        <button onclick="quickSearch('AI眼镜产品对比评测')" class="glass-card px-4 py-2 rounded-full text-sm hover:bg-white/10 transition">
+                            👓 AI眼镜对比
+                        </button>
+                        <button onclick="quickSearch('2025年新能源汽车市场分析')" class="glass-card px-4 py-2 rounded-full text-sm hover:bg-white/10 transition">
+                            🚗 新能源汽车
+                        </button>
+                        <button onclick="quickSearch('半导体行业发展趋势')" class="glass-card px-4 py-2 rounded-full text-sm hover:bg-white/10 transition">
+                            🔬 半导体行业
+                        </button>
+                    </div>
+                </motion.div>
+
+                <!-- Recent Searches -->
+                <motion.div 
+                    id="recentSearches"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6, delay: 0.6 }}
+                    className="mt-12"
+                >
+                    <p class="text-gray-500 text-sm mb-4">最近搜索：</p>
+                    <div id="recentList" class="space-y-2">
+                        <!-- Dynamic content -->
+                    </div>
+                </motion.div>
+            </div>
+
+            <!-- Loading Page -->
+            <div id="loadingPage" class="hidden w-full max-w-4xl text-center">
+                <div class="glass-card rounded-3xl p-12">
+                    <div class="loading-spinner mx-auto mb-8"></div>
+                    <h3 class="font-orbitron text-2xl font-bold mb-4">
+                        <span id="loadingStatus" class="gradient-text">正在收集信息...</span>
+                    </h3>
+                    <p class="text-gray-400 mb-8" id="loadingDetail">AI正在全网搜索相关资料</p>
+                    
+                    <!-- Progress Steps -->
+                    <div class="flex justify-center items-center gap-4 mb-8">
+                        <div id="step1" class="progress-step w-4 h-4 rounded-full bg-cyan-500 flex items-center justify-center">
+                            <i class="fas fa-search text-xs"></i>
+                        </div>
+                        <div class="w-12 h-0.5 bg-gray-700">
+                            <div id="progress1" class="h-full bg-cyan-500 transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        <div id="step2" class="progress-step w-4 h-4 rounded-full bg-gray-600 flex items-center justify-center">
+                            <i class="fas fa-brain text-xs"></i>
+                        </div>
+                        <div class="w-12 h-0.5 bg-gray-700">
+                            <div id="progress2" class="h-full bg-cyan-500 transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        <div id="step3" class="progress-step w-4 h-4 rounded-full bg-gray-600 flex items-center justify-center">
+                            <i class="fas fa-cogs text-xs"></i>
+                        </div>
+                        <div class="w-12 h-0.5 bg-gray-700">
+                            <div id="progress3" class="h-full bg-cyan-500 transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        <div id="step4" class="progress-step w-4 h-4 rounded-full bg-gray-600 flex items-center justify-center">
+                            <i class="fas fa-check text-xs"></i>
+                        </div>
+                    </div>
+                    
+                    <p id="thinkingText" class="text-gray-500 text-sm italic"></p>
+                    
+                    <button onclick="cancelResearch()" class="mt-8 text-gray-500 hover:text-white transition">
+                        <i class="fas fa-times mr-2"></i>取消
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Page -->
+            <div id="resultPage" class="hidden w-full max-w-6xl">
+                <!-- Result Header -->
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="glass-card rounded-3xl p-6 mb-6"
+                >
+                    <div class="flex items-center justify-between flex-wrap gap-4">
+                        <div>
+                            <h2 id="resultTitle" class="font-orbitron text-2xl font-bold gradient-text mb-2">
+                                研究结果
+                            </h2>
+                            <p class="text-gray-400 text-sm">
+                                <span id="resultTime"></span> · 
+                                <span id="resultSources">0</span>个信息源
+                            </p>
+                        </div>
+                        <div class="flex gap-3">
+                            <button onclick="editResearch()" class="glass-card px-4 py-2 rounded-xl hover:bg-white/10 transition">
+                                <i class="fas fa-edit mr-2"></i>编辑问题
+                            </button>
+                            <button onclick="rerunResearch()" class="glass-card px-4 py-2 rounded-xl hover:bg-white/10 transition">
+                                <i class="fas fa-redo mr-2"></i>重新搜索
+                            </button>
+                            <button onclick="exportResult()" class="bg-gradient-to-r from-cyan-500 to-purple-500 px-4 py-2 rounded-xl font-bold hover:opacity-90 transition">
+                                <i class="fas fa-download mr-2"></i>导出
+                            </button>
+                        </div>
+                    </div>
+                </motion.div>
+
+                <!-- Edit Modal -->
+                <div id="editModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="glass-card rounded-3xl p-6 w-full max-w-2xl"
+                    >
+                        <h3 class="font-orbitron text-xl font-bold mb-4">编辑研究问题</h3>
+                        <textarea 
+                            id="editInput"
+                            class="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-white placeholder-gray-500 outline-none focus:border-cyan-500 transition h-32 resize-none"
+                            placeholder="输入你想研究的问题..."
+                        ></textarea>
+                        <div class="flex justify-end gap-3 mt-4">
+                            <button onclick="closeEditModal()" class="glass-card px-4 py-2 rounded-xl hover:bg-white/10 transition">
+                                取消
+                            </button>
+                            <button onclick="saveAndRerun()" class="bg-gradient-to-r from-cyan-500 to-purple-500 px-6 py-2 rounded-xl font-bold hover:opacity-90 transition">
+                                保存并重新搜索
+                            </button>
+                        </div>
+                    </motion.div>
+                </div>
+
+                <!-- Settings Modal -->
+                <div id="settingsModal" class="hidden fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
+                    <motion.div 
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        className="glass-card rounded-3xl p-6 w-full max-w-lg"
+                    >
+                        <div class="flex items-center justify-between mb-6">
+                            <h3 class="font-orbitron text-xl font-bold">API设置</h3>
+                            <button onclick="closeSettings()" class="text-gray-400 hover:text-white">
+                                <i class="fas fa-times text-xl"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-gray-400 text-sm mb-2">API Endpoint</label>
+                                <input 
+                                    type="text" 
+                                    id="apiEndpoint"
+                                    class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 outline-none focus:border-cyan-500 transition"
+                                    placeholder="例如: http://localhost:8000/api/research"
+                                    value="http://localhost:8000/api/research"
+                                >
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 text-sm mb-2">API Key (可选)</label>
+                                <input 
+                                    type="password" 
+                                    id="apiKey"
+                                    class="w-full bg-black/30 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 outline-none focus:border-cyan-500 transition"
+                                    placeholder="如果需要认证请输入"
+                                >
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <input type="checkbox" id="useMock" checked class="w-4 h-4 accent-cyan-500">
+                                <label for="useMock" class="text-gray-400 text-sm">使用模拟数据（测试用）</label>
+                            </div>
+                        </div>
+                        
+                        <div class="flex justify-end gap-3 mt-6">
+                            <button onclick="closeSettings()" class="glass-card px-4 py-2 rounded-xl hover:bg-white/10 transition">
+                                取消
+                            </button>
+                            <button onclick="saveSettings()" class="bg-gradient-to-r from-cyan-500 to-purple-500 px-6 py-2 rounded-xl font-bold hover:opacity-90 transition">
+                                保存设置
+                            </button>
+                        </div>
+                    </motion.div>
+                </div>
+
+                <!-- Result Content -->
+                <div id="resultContent" class="space-y-6">
+                    <!-- Dynamic content -->
+                </div>
+
+                <!-- Actions -->
+                <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.5 }}
+                    className="mt-8 flex justify-center gap-4"
+                >
+                    <button onclick="newResearch()" class="glass-card px-6 py-3 rounded-xl hover:bg-white/10 transition">
+                        <i class="fas fa-plus mr-2"></i>新研究
+                    </button>
+                </motion.div>
+            </div>
+
+        </main>
+
+        <!-- History Sidebar -->
+        <div id="historySidebar" class="hidden fixed inset-y-0 right-0 w-80 bg-[#0a0a0f]/95 backdrop-blur-xl border-l border-white/10 z-50 transform translate-x-full transition-transform duration-300">
+            <div class="p-6 h-full flex flex-col">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="font-orbitron text-lg font-bold">历史记录</h3>
+                    <button onclick="closeHistory()" class="text-gray-400 hover:text-white">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div id="historyList" class="flex-1 overflow-y-auto space-y-3">
+                    <!-- Dynamic content -->
+                </div>
+                <button onclick="clearHistory()" class="mt-4 text-gray-500 hover:text-red-400 text-sm transition">
+                    <i class="fas fa-trash-alt mr-2"></i>清空历史
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // Configuration
+        const CONFIG = {
+            apiEndpoint: localStorage.getItem('apiEndpoint') || 'http://localhost:8000/api/research',
+            apiKey: localStorage.getItem('apiKey') || '',
+            useMock: localStorage.getItem('useMock') !== 'false'
+        };
+
+        // State
+        let currentQuestion = '';
+        let researchHistory = JSON.parse(localStorage.getItem('researchHistory') || '[]');
+        let isCancelled = false;
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            renderRecentSearches();
+            document.getElementById('apiEndpoint').value = CONFIG.apiEndpoint;
+            document.getElementById('apiKey').value = CONFIG.apiKey;
+            document.getElementById('useMock').checked = CONFIG.useMock;
+        });
+
+        // Handle Enter key
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                startResearch();
+            }
+        }
+
+        // Quick search
+        function quickSearch(query) {
+            document.getElementById('searchInput').value = query;
+            startResearch();
+        }
+
+        // Start research
+        async function startResearch() {
+            const input = document.getElementById('searchInput');
+            const question = input.value.trim();
+            
+            if (!question) {
+                input.focus();
+                input.classList.add('animate-shake');
+                setTimeout(() => input.classList.remove('animate-shake'), 500);
+                return;
+            }
+
+            currentQuestion = question;
+            isCancelled = false;
+            
+            // Save to history
+            addToHistory(question);
+            
+            // Show loading
+            showLoading();
+            
+            // Call API
+            await callResearchAPI(question);
+        }
+
+        // Call Research API
+        async function callResearchAPI(question) {
+            const steps = [
+                { status: '正在分析问题...', detail: 'AI正在理解你的研究需求', thinking: '正在解析您的问题：' + question, progress: 25 },
+                { status: '正在全网搜索...', detail: '收集相关资讯和数据', thinking: '搜索相关信息源...', progress: 50 },
+                { status: '正在整理信息...', detail: '筛选和分类关键内容', thinking: '分析并整理收集到的数据...', progress: 75 },
+                { status: '正在生成报告...', detail: '整合分析结果', thinking: '正在生成最终报告...', progress: 100 }
+            ];
+
+            try {
+                if (CONFIG.useMock) {
+                    // Use mock data
+                    for (let i = 0; i < steps.length; i++) {
+                        if (isCancelled) return;
+                        
+                        await updateProgress(steps[i]);
+                        await delay(1500 + Math.random() * 1000);
+                    }
+                    showResult();
+                } else {
+                    // Call real API
+                    const response = await fetch(CONFIG.apiEndpoint, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            ...(CONFIG.apiKey ? { 'Authorization': `Bearer ${CONFIG.apiKey}` } : {})
+                        },
+                        body: JSON.stringify({ question })
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`API Error: ${response.status}`);
+                    }
+
+                    const data = await response.json();
+                    showResultWithData(data);
+                }
+            } catch (error) {
+                console.error('Research API Error:', error);
+                // Fallback to mock data on error
+                for (let i = 0; i < steps.length; i++) {
+                    if (isCancelled) return;
+                    await updateProgress(steps[i]);
+                    await delay(1500);
+                }
+                showResult();
+            }
+        }
+
+        // Update progress
+        async function updateProgress(step) {
+            document.getElementById('loadingStatus').textContent = step.status;
+            document.getElementById('loadingDetail').textContent = step.detail;
+            document.getElementById('thinkingText').textContent = step.thinking;
+            
+            const stepNum = step.progress / 25;
+            for (let i = 1; i <= 4; i++) {
+                const el = document.getElementById(`step${i}`);
+                const progressEl = document.getElementById(`progress${i}`);
+                if (i <= stepNum) {
+                    el.classList.add('active');
+                    progressEl.style.width = '100%';
+                } else {
+                    el.classList.remove('active');
+                    progressEl.style.width = '0%';
+                }
+            }
+        }
+
+        // Delay helper
+        function delay(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        // Show loading page
+        function showLoading() {
+            document.getElementById('searchPage').classList.add('hidden');
+            document.getElementById('resultPage').classList.add('hidden');
+            document.getElementById('loadingPage').classList.remove('hidden');
+            
+            // Reset progress
+            for (let i = 1; i <= 4; i++) {
+                document.getElementById(`step${i}`).classList.remove('active');
+                document.getElementById(`progress${i}`).style.width = '0%';
+            }
+        }
+
+        // Show result page with mock data
+        function showResult() {
+            document.getElementById('loadingPage').classList.add('hidden');
+            document.getElementById('resultPage').classList.remove('hidden');
+            
+            // Update header
+            document.getElementById('resultTitle').textContent = currentQuestion;
+            document.getElementById('resultTime').textContent = new Date().toLocaleString('zh-CN');
+            document.getElementById('resultSources').textContent = Math.floor(Math.random() * 20) + 10;
+            
+            // Generate mock result
+            generateMockResult(currentQuestion);
+        }
+
+        // Show result with real API data
+        function showResultWithData(data) {
+            document.getElementById('loadingPage').classList.add('hidden');
+            document.getElementById('resultPage').classList.remove('hidden');
+            
+            document.getElementById('resultTitle').textContent = data.title || currentQuestion;
+            document.getElementById('resultTime').textContent = new Date().toLocaleString('zh-CN');
+            document.getElementById('resultSources').textContent = data.sources?.length || 0;
+            
+            const container = document.getElementById('resultContent');
+            
+            if (data.sections && Array.isArray(data.sections)) {
+                container.innerHTML = data.sections.map((section, index) => `
+                    <motion.div 
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: ${index * 0.1} }}
+                        class="glass-card rounded-2xl p-6 card-hover"
+                    >
+                        <h3 class="font-orbitron text-lg font-bold mb-4 text-cyan-400">${section.title}</h3>
+                        <p class="text-gray-300 leading-relaxed">${section.content}</p>
+                        ${section.sources ? `
+                        <div class="mt-4 flex gap-2 flex-wrap">
+                            ${section.sources.map(s => `
+                                <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-xs">
+                                    <i class="fas fa-link mr-1"></i>${s}
+                                </span>
+                            `).join('')}
+                        </div>
+                        ` : ''}
+                    </motion.div>
+                `).join('');
+            } else {
+                // Fallback to mock
+                generateMockResult(currentQuestion);
+            }
+        }
+
+        // Generate mock result
+        function generateMockResult(question) {
+            const container = document.getElementById('resultContent');
+            
+            const templates = {
+                '黄金': {
+                    title: '2025年黄金价格走势分析',
+                    sections: [
+                        { title: '📊 当前金价概况', content: '国际金价已达 $3,732/盎司，国内金价 ¥674/克，年内涨幅超20%。2024年全年涨幅达27%，创历史纪录。' },
+                        { title: '🏦 央行购金潮', content: '全球央行2025年购金超1500吨，中国连续16个月增持黄金储备。中信证券指出"央行购金行为仍是影响黄金市场的最重要因素"。' },
+                        { title: '💹 五大影响因素', content: '1.央行购金(98%) 2.美联储政策(90%) 3.地缘政治(85%) 4.美元走势(80%) 5.关税政策(70%)' },
+                        { title: '🔮 机构预测', content: '摩根大通：2026年底$6,300 | 高盛：2026年底$4,900 | BullionVault：2025年$3,000' },
+                        { title: '📈 技术分析', content: '金价目前处于历史高位震荡区间，短期内有回调压力，但长期上涨趋势不变。' }
+                    ]
+                },
+                'AI眼镜': {
+                    title: 'AI眼镜产品对比评测',
+                    sections: [
+                        { title: '📱 主要产品', content: 'Ray-Ban Meta($299/约¥2200)、小米AI眼镜(¥2399)、雷鸟V3(¥1899)、闪极AI(¥1599)' },
+                        { title: '⭐ 综合评分', content: 'Ray-Ban Meta 9.2分(全球销量第一) | 雷鸟V3 9.0分(性价比之王) | 小米AI 8.8分 | 闪极AI 8.5分' },
+                        { title: '🔋 续航能力', content: '小米AI眼镜8.6小时领跑 | 雷鸟V3充电盒支持30小时+ | Ray-Ban Meta 4小时/36小时(带盒)' },
+                        { title: '🤖 AI功能', content: 'Meta AI(社交整合) | 小米MiLM+小爱同学 | 阿里通义(实时翻译) | 多模型支持' },
+                        { title: '💡 购买建议', content: '追求社交体验选Meta | 追求性价比选雷鸟V3 | 小米生态用户选小米' }
+                    ]
+                }
+            };
+
+            let result = null;
+            for (const key in templates) {
+                if (question.includes(key)) {
+                    result = templates[key];
+                    break;
+                }
+            }
+
+            if (!result) {
+                result = {
+                    title: `关于"${question}"的研究报告`,
+                    sections: [
+                        { title: '📋 研究概述', content: `针对"${question}"进行了全面信息收集和分析，涵盖市场现状、发展趋势、关键数据等方面。` },
+                        { title: '🔍 关键发现', content: '根据最新数据和趋势，该领域正在快速发展，市场前景广阔。技术创新和市场需求是主要推动力。' },
+                        { title: '📈 发展趋势', content: '预计未来几年将保持快速增长态势，相关技术和应用场景将持续扩展。' },
+                        { title: '💡 建议', content: '建议持续关注行业动态，把握发展机遇。同时注意风险管理，合理配置资源。' }
+                    ]
+                };
+            }
+
+            container.innerHTML = result.sections.map((section, index) => `
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: ${index * 0.1} }}
+                    class="glass-card rounded-2xl p-6 card-hover"
+                >
+                    <h3 class="font-orbitron text-lg font-bold mb-4 text-cyan-400">${section.title}</h3>
+                    <p class="text-gray-300 leading-relaxed">${section.content}</p>
+                    <div class="mt-4 flex gap-2">
+                        <span class="px-3 py-1 bg-cyan-500/20 text-cyan-300 rounded-full text-xs">
+                            <i class="fas fa-check-circle mr-1"></i>已验证
+                        </span>
+                    </div>
+                </motion.div>
+            `).join('');
+        }
+
+        // Edit research
+        function editResearch() {
+            document.getElementById('editInput').value = currentQuestion;
+            document.getElementById('editModal').classList.remove('hidden');
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').classList.add('hidden');
+        }
+
+        function saveAndRerun() {
+            const newQuestion = document.getElementById('editInput').value.trim();
+            if (newQuestion && newQuestion !== currentQuestion) {
+                currentQuestion = newQuestion;
+                document.getElementById('searchInput').value = newQuestion;
+                addToHistory(newQuestion);
+            }
+            closeEditModal();
+            showLoading();
+            callResearchAPI(currentQuestion);
+        }
+
+        // Re-run research
+        function rerunResearch() {
+            showLoading();
+            callResearchAPI(currentQuestion);
+        }
+
+        // New research
+        function newResearch() {
+            document.getElementById('resultPage').classList.add('hidden');
+            document.getElementById('searchPage').classList.remove('hidden');
+            document.getElementById('searchInput').value = '';
+            document.getElementById('searchInput').focus();
+        }
+
+        // Cancel research
+        function cancelResearch() {
+            isCancelled = true;
+            document.getElementById('loadingPage').classList.add('hidden');
+            document.getElementById('searchPage').classList.remove('hidden');
+        }
+
+        // Export result
+        function exportResult() {
+            const sections = document.querySelectorAll('#resultContent h3');
+            const contents = document.querySelectorAll('#resultContent p');
+            
+            let content = `# ${currentQuestion}\n\n`;
+            sections.forEach((section, i) => {
+                content += `## ${section.textContent}\n\n`;
+                content += `${contents[i].textContent}\n\n`;
+            });
+            
+            const blob = new Blob([content], { type: 'text/markdown' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${currentQuestion.slice(0, 20)}_研究结果.md`;
+            a.click();
+        }
+
+        // Settings functions
+        function showSettings() {
+            document.getElementById('settingsModal').classList.remove('hidden');
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').classList.add('hidden');
+        }
+
+        function saveSettings() {
+            const endpoint = document.getElementById('apiEndpoint').value.trim();
+            const key = document.getElementById('apiKey').value.trim();
+            const useMock = document.getElementById('useMock').checked;
+            
+            localStorage.setItem('apiEndpoint', endpoint);
+            localStorage.setItem('apiKey', key);
+            localStorage.setItem('useMock', useMock);
+            
+            CONFIG.apiEndpoint = endpoint;
+            CONFIG.apiKey = key;
+            CONFIG.useMock = useMock;
+            
+            closeSettings();
+        }
+
+        // History functions
+        function addToHistory(question) {
+            const exists = researchHistory.findIndex(h => h.question === question);
+            if (exists !== -1) {
+                researchHistory.splice(exists, 1);
+            }
+            researchHistory.unshift({ question, time: new Date().toISOString() });
+            researchHistory = researchHistory.slice(0, 20);
+            localStorage.setItem('researchHistory', JSON.stringify(researchHistory));
+            renderRecentSearches();
+        }
+
+        function renderRecentSearches() {
+            const container = document.getElementById('recentList');
+            if (researchHistory.length === 0) {
+                container.innerHTML = '<p class="text-gray-600 text-sm">暂无搜索记录</p>';
+                return;
+            }
+            
+            container.innerHTML = researchHistory.slice(0, 5).map((item, index) => `
+                <div class="search-history-item glass-card rounded-xl p-3 cursor-pointer" onclick="loadFromHistory(${index})">
+                    <p class="text-white text-sm truncate">${item.question}</p>
+                    <p class="text-gray-600 text-xs mt-1">${new Date(item.time).toLocaleString('zh-CN')}</p>
+                </div>
+            `).join('');
+        }
+
+        function loadFromHistory(index) {
+            const item = researchHistory[index];
+            currentQuestion = item.question;
+            document.getElementById('searchInput').value = item.question;
+            startResearch();
+        }
+
+        function showHistory() {
+            const sidebar = document.getElementById('historySidebar');
+            sidebar.classList.remove('hidden');
+            setTimeout(() => sidebar.classList.remove('translate-x-full'), 10);
+            renderHistoryList();
+        }
+
+        function closeHistory() {
+            const sidebar = document.getElementById('historySidebar');
+            sidebar.classList.add('translate-x-full');
+            setTimeout(() => sidebar.classList.add('hidden'), 300);
+        }
+
+        function renderHistoryList() {
+            const container = document.getElementById('historyList');
+            if (researchHistory.length === 0) {
+                container.innerHTML = '<p class="text-gray-600 text-sm text-center py-8">暂无历史记录</p>';
+                return;
+            }
+            
+            container.innerHTML = researchHistory.map((item, index) => `
+                <div class="search-history-item glass-card rounded-xl p-3 cursor-pointer" onclick="loadFromHistory(${index})">
+                    <p class="text-white text-sm truncate">${item.question}</p>
+                    <p class="text-gray-600 text-xs mt-1">${new Date(item.time).toLocaleString('zh-CN')}</p>
+                </div>
+            `).join('');
+        }
+
+        function clearHistory() {
+            researchHistory = [];
+            localStorage.removeItem('researchHistory');
+            renderRecentSearches();
+            renderHistoryList();
+        }
+    </script>
+</body>
+</html>

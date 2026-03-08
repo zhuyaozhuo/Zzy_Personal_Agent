@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>蔚来ES6 vs ES8 车型对比</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 48px 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 48px;
+            padding: 36px 0;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        h1 {
+            font-size: 2rem;
+            font-weight: 300;
+            color: #222;
+            letter-spacing: -0.5px;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 0.9rem;
+            margin-top: 8px;
+        }
+        
+        .compare-section {
+            margin-bottom: 36px;
+        }
+        
+        .compare-title {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #222;
+            margin-bottom: 20px;
+            padding-left: 12px;
+            border-left: 3px solid #00c1c4;
+        }
+        
+        .compare-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0;
+            background: #fff;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        
+        .compare-header {
+            display: grid;
+            grid-template-columns: 140px 1fr 1fr;
+            background: #fafafa;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .compare-header-cell {
+            padding: 20px 16px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+        }
+        
+        .compare-header-cell:first-child {
+            text-align: left;
+            color: #333;
+        }
+        
+        .compare-header-cell.es8 {
+            background: #f0f7f7;
+            color: #00a0a4;
+        }
+        
+        .compare-header-cell.es6 {
+            background: #f7f5f0;
+            color: #b8860b;
+        }
+        
+        .compare-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 1fr;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .compare-row:last-child {
+            border-bottom: none;
+        }
+        
+        .compare-label {
+            padding: 18px 16px;
+            font-size: 0.9rem;
+            color: #555;
+            background: #fafafa;
+            font-weight: 500;
+        }
+        
+        .compare-value {
+            padding: 18px 16px;
+            font-size: 0.9rem;
+            color: #333;
+            text-align: center;
+        }
+        
+        .compare-value.es8 {
+            background: #fdfdfd;
+        }
+        
+        .compare-value.es6 {
+            background: #fdfdfd;
+        }
+        
+        .highlight {
+            color: #00a0a4;
+            font-weight: 600;
+        }
+        
+        .highlight-es6 {
+            color: #b8860b;
+            font-weight: 600;
+        }
+        
+        .price-tag {
+            font-size: 1.4rem;
+            font-weight: 600;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: #222;
+            margin-bottom: 20px;
+        }
+        
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .feature-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .feature-card h3 {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #222;
+            margin-bottom: 12px;
+        }
+        
+        .feature-card p {
+            font-size: 0.85rem;
+            color: #666;
+            line-height: 1.7;
+        }
+        
+        .recommend-section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 32px;
+            margin-top: 20px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+        }
+        
+        .recommend-section h2 {
+            font-size: 1.15rem;
+            font-weight: 500;
+            color: #222;
+            margin-bottom: 24px;
+        }
+        
+        .recommend-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+        
+        .recommend-card {
+            padding: 24px;
+            border-radius: 12px;
+            background: #fafafa;
+        }
+        
+        .recommend-card.es8 {
+            border: 2px solid #e8f4f4;
+        }
+        
+        .recommend-card.es6 {
+            border: 2px solid #f5f0e6;
+        }
+        
+        .recommend-card h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+        }
+        
+        .recommend-card.es8 h3 {
+            color: #00a0a4;
+        }
+        
+        .recommend-card.es6 h3 {
+            color: #b8860b;
+        }
+        
+        .recommend-card ul {
+            list-style: none;
+        }
+        
+        .recommend-card li {
+            font-size: 0.85rem;
+            color: #555;
+            padding: 6px 0;
+            padding-left: 16px;
+            position: relative;
+        }
+        
+        .recommend-card li::before {
+            content: '·';
+            position: absolute;
+            left: 0;
+            color: #999;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 32px;
+            color: #999;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 768px) {
+            .compare-grid,
+            .compare-header,
+            .compare-row,
+            .recommend-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .compare-header-cell,
+            .compare-label,
+            .compare-value {
+                text-align: left;
+                padding: 12px 16px;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>蔚来 ES6 vs ES8 车型对比</h1>
+            <p class="subtitle">2024款 / 2025款 · 纯电动 SUV</p>
+        </header>
+        
+        <div class="compare-section">
+            <div class="compare-title">核心参数对比</div>
+            <div class="compare-grid">
+                <div class="compare-header">
+                    <div class="compare-header-cell">参数</div>
+                    <div class="compare-header-cell es8">ES8 2024款</div>
+                    <div class="compare-header-cell es6">ES6 2025款</div>
+                </div>
+                
+                <div class="compare-row">
+                    <div class="compare-label">官方指导价</div>
+                    <div class="compare-value es8"><span class="price-tag">49.8万起</span></div>
+                    <div class="compare-value es6"><span class="price-tag">33.8万起</span></div>
+                </div>
+                
+                <div class="compare-row">
+                    <div class="compare-label">车型级别</div>
+                    <div class="compare-value es8">中大型SUV</div>
+                    <div class="compare-value es6">中型SUV</div>
+                </div>
+                
+                <div class="compare-row">
+                    <div class="compare-label">车身尺寸</div>
+                    <div class="compare-value es8">5099×1989×1750mm</div>
+                    <div class="compare-value es6">4854×1995×1703mm</div>
+                </div>
+                
+                <div class="compare-row">
+                    <div class="compare-label">轴距</div>
+                    <div class="compare-value es8 highlight">3070mm</div>
+                    <div class="compare-value es6">2915mm</div>
+                </div>
+                
+                <div class="compare-row">
+                    <div class="compare-label">座位数</div>
+                    <div class="compare-value es8 highlight">6座 / 7座</div>
+                    <div class="compare-value es6">5座</div>
+                </div>
+                
+                <div class="compare-row">
+                    <div class="compare-label">电机功率</div>
+                    <div class="compare-value es8 highlight">480kW (653马力)</div>
+                    <div class="compare-value es6">360kW (490马力)</div>
+                </div>
+                
+                <div class="compare-row">
+                    <div class="compare-label">扭矩</div>
+                    <div class="compare-value es8 highlight">850N·m</div>
+                    <div class="compare-value es6">700N·m</div>
+                </div>
+                
+                <div class="compare-row">
+                    <div class="compare-label">零百加速</div>
+                    <div class="compare-value es8 highlight">4.1秒</div>
+                    <div class="compare-value es6">4.5秒</div>
+                </div>
+                
+                <div class="compare-row">
+                    <div class="compare-label">电池容量</div>
+                    <div class="compare-value es8">75kWh / 100kWh</div>
+                    <div class="compare-value es6">75kWh / 100kWh</div>
+                </div>
+                
+                <div class="compare-row">
+                    <div class="compare-label">CLTC续航</div>
+                    <div class="compare-value es8">465km / 605km</div>
+                    <div class="compare-value es6 highlight-es6">500km / 650km</div>
+                </div>
+                
+                <div class="compare-row">
+                    <div class="compare-label">驱动方式</div>
+                    <div class="compare-value es8">双电机四驱</div>
+                    <div class="compare-value es6">双电机四驱</div>
+                </div>
+                
+                <div class="compare-row">
+                    <div class="compare-label">悬架系统</div>
+                    <div class="compare-value es8">空气悬架</div>
+                    <div class="compare-value es6">CDC动态悬架阻尼</div>
+                </div>
+                
+                <div class="compare-row">
+                    <div class="compare-label">换电支持</div>
+                    <div class="compare-value es8">✓ 支持</div>
+                    <div class="compare-value es6">✓ 支持</div>
+                </div>
+            </div>
+        </div>
+        
+        <section class="section">
+            <div class="section-title">核心亮点</div>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h3>🚀 动力性能</h3>
+                    <p>ES8采用高功率电机，653马力强劲动力，4.1秒破百，适合追求极致性能的驾驶者。ES6动力同样充沛，490马力满足日常使用需求。</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔋 续航与换电</h3>
+                    <p>两款车型均支持蔚来换电技术，75kWh/100kWh两种电池容量可选。ES6因车身更轻，CLTC续航略优于ES8。</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🛋️ 空间布局</h3>
+                    <p>ES8提供6座/7座布局，轴距3070mm，适合多人口家庭。ES6为5座设计，轴距2915mm，城市通勤更灵活。</p>
+                </div>
+                <div class="feature-card">
+                    <h3>💎 智能配置</h3>
+                    <p>均搭载蔚来智能系统NIO OS，配有激光雷达、ADAM高算力计算平台，支持高速NOA领航辅助。</p>
+                </div>
+            </div>
+        </section>
+        
+        <section class="recommend-section">
+            <h2>选购建议</h2>
+            <div class="recommend-grid">
+                <div class="recommend-card es8">
+                    <h3>推荐选择 ES8</h3>
+                    <ul>
+                        <li>多人口家庭（6-7人出行）</li>
+                        <li>追求旗舰豪华体验</li>
+                        <li>需要更大载物空间</li>
+                        <li>预算充足，追求极致动力</li>
+                        <li>商务接待需求</li>
+                    </ul>
+                </div>
+                <div class="recommend-card es6">
+                    <h3>推荐选择 ES6</h3>
+                    <ul>
+                        <li>城市日常通勤为主</li>
+                        <li>小家庭或单人使用</li>
+                        <li>预算在35-40万区间</li>
+                        <li>更注重续航表现</li>
+                        <li>追求灵活操控</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>数据来源：蔚来官网、太平洋汽车 | 更新时间：2025年2月</p>
+        </footer>
+    </div>
+</body>
+</html>

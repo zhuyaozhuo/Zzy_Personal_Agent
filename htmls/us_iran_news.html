@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美国与伊朗最新新闻 - 2026年2月</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f8f9fa;
+            min-height: 100vh;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 60px 24px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 40px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 300;
+            color: #222;
+            letter-spacing: -0.5px;
+            margin-bottom: 12px;
+        }
+        
+        .subtitle {
+            color: #888;
+            font-size: 0.95rem;
+            font-weight: 400;
+        }
+        
+        .section {
+            margin-bottom: 56px;
+        }
+        
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 32px;
+        }
+        
+        .section-title h2 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            color: #222;
+        }
+        
+        .flag {
+            font-size: 1.5rem;
+        }
+        
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        
+        .news-card {
+            background: #fff;
+            border-radius: 12px;
+            padding: 28px;
+            transition: all 0.25s ease;
+            border: 1px solid #eee;
+            cursor: pointer;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            border-color: #ddd;
+        }
+        
+        .news-card h3 {
+            font-size: 1.05rem;
+            margin-bottom: 12px;
+            color: #222;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        
+        .news-card p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-top: 14px;
+            font-weight: 500;
+            letter-spacing: 0.3px;
+        }
+        
+        .tag-urgent {
+            background: #fff0f0;
+            color: #e53935;
+        }
+        
+        .tag-negotiation {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .tag-military {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+        
+        .tag-political {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+        
+        .tag-economy {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 32px;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 8px;
+            bottom: 8px;
+            width: 2px;
+            background: #ddd;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 24px;
+            padding: 20px 24px;
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid #eee;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -28px;
+            top: 24px;
+            width: 8px;
+            height: 8px;
+            background: #999;
+            border-radius: 50%;
+        }
+        
+        .timeline-date {
+            color: #888;
+            font-size: 0.8rem;
+            margin-bottom: 6px;
+            font-weight: 500;
+        }
+        
+        .timeline-content h3 {
+            color: #333;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        
+        .timeline-content p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .summary-section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 36px;
+            margin-top: 48px;
+            border: 1px solid #eee;
+        }
+        
+        .summary-section h2 {
+            margin-bottom: 24px;
+            color: #222;
+            font-weight: 500;
+            font-size: 1.25rem;
+        }
+        
+        .summary-section ul {
+            list-style: none;
+        }
+        
+        .summary-section li {
+            padding: 14px 0;
+            border-bottom: 1px solid #f0f0f0;
+            color: #555;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+        
+        .summary-section li:last-child {
+            border-bottom: none;
+        }
+        
+        .summary-section li::before {
+            content: '·';
+            color: #999;
+            margin-right: 10px;
+            font-size: 1.2rem;
+            line-height: 1;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+            font-size: 0.85rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.6rem;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 32px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>美国与伊朗最新新闻</h1>
+            <p class="subtitle">2026年2月 · 实时更新</p>
+        </header>
+        
+        <section class="section">
+            <div class="section-title">
+                <span class="flag">🇺🇸</span>
+                <h2>美国动态</h2>
+            </div>
+            <div class="news-grid">
+                <div class="news-card">
+                    <h3>美最高法院裁定特朗普关税违法</h3>
+                    <p>当地时间2026年2月20日，美国最高法院以6:3的投票结果作出重磅裁决：特朗普政府依据《国际紧急经济权力法》(IEEPA)实施的大规模关税措施违法。这不仅是司法挫败，更触发了一系列政治连锁反应。</p>
+                    <span class="tag tag-political">政治</span>
+                </div>
+                <div class="news-card">
+                    <h3>美俄乌三方日内瓦会谈</h3>
+                    <p>2026年2月26日，俄、乌代表于今日在瑞士日内瓦分别与美国举行双边会谈。此前，美国总统特朗普通与乌克兰总统泽连斯基通电话，为会谈做准备。</p>
+                    <span class="tag tag-political">外交</span>
+                </div>
+                <div class="news-card">
+                    <h3>特朗普对伊朗下最后通牒</h3>
+                    <p>美国总统特朗普2月19日表示，给伊朗10天时间就核计划进行谈判。美国可能于2月23日或24日对伊朗发动军事打击，但截至26日特朗普仍未下令打击。</p>
+                    <span class="tag tag-urgent">紧急</span>
+                </div>
+                <div class="news-card">
+                    <h3>美国经济数据发布</h3>
+                    <p>美国第四季度GDP远低于预期，经济增长放缓且通胀坚挺，这或使美联储利率路径复杂化。12月通胀指标仍高于美联储目标。</p>
+                    <span class="tag tag-economy">经济</span>
+                </div>
+                <div class="news-card">
+                    <h3>美军继续增兵中东</h3>
+                    <p>在美国与伊朗举行新一轮间接谈判前，美国继续向中东增派军事力量。美军在伊朗周边部署了压倒性的军事力量。</p>
+                    <span class="tag tag-military">军事</span>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <div class="section-title">
+                <span class="flag">🇮🇷</span>
+                <h2>伊朗动态</h2>
+            </div>
+            <div class="news-grid">
+                <div class="news-card">
+                    <h3>美伊第三轮核谈判举行</h3>
+                    <p>2026年2月26日，美伊第三轮间接核谈判在日内瓦举行。此次会谈被视为在美国总统特朗普下令发动打击前，美伊双方寻求妥协的最后努力。</p>
+                    <span class="tag tag-negotiation">谈判</span>
+                </div>
+                <div class="news-card">
+                    <h3>伊朗权力布局调整</h3>
+                    <p>2026年2月23日，伊朗迎来关键权力布局调整。《纽约时报》从伊朗官方与革命卫队渠道得到确切消息，哈梅内伊已敲定阿里·拉里贾尼为自身突发状况下的国家事务接管人。</p>
+                    <span class="tag tag-political">政治</span>
+                </div>
+                <div class="news-card">
+                    <h3>伊朗最高层做好最坏准备</h3>
+                    <p>面对美方军事威胁，伊朗最高层甚至做好权力交接、防"斩首"的最坏准备，却始终强硬拒降。背后是伊朗退无可退的现实困境。</p>
+                    <span class="tag tag-urgent">紧急</span>
+                </div>
+                <div class="news-card">
+                    <h3>伊朗致函联合国抗议</h3>
+                    <p>当地时间2月19日，伊朗常驻联合国代表团致函联合国安理会，指责美国总统近期就可能对伊朗采取军事行动的公开言论构成对《联合国宪章》的违反。</p>
+                    <span class="tag tag-political">外交</span>
+                </div>
+                <div class="news-card">
+                    <h3>伊美阿曼首轮谈判</h3>
+                    <p>2026年2月6日，伊朗外交部长阿拉格希前往阿曼马斯喀特参加首轮间接谈判。伊朗要求将谈判地点从土耳其改为阿曼。</p>
+                    <span class="tag tag-negotiation">谈判</span>
+                </div>
+            </div>
+        </section>
+        
+        <section class="section">
+            <div class="section-title">
+                <span class="flag">📊</span>
+                <h2>关键时间线</h2>
+            </div>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">2026年2月3日</div>
+                    <div class="timeline-content">
+                        <h3>特朗普同意与伊朗谈判</h3>
+                        <p>特朗普政府同意与伊朗2月6日在阿曼举行谈判</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026年2月6日</div>
+                    <div class="timeline-content">
+                        <h3>美伊首轮阿曼谈判</h3>
+                        <p>伊朗外交部长阿拉格希前往阿曼马斯喀特参加首轮间接谈判</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026年2月19日</div>
+                    <div class="timeline-content">
+                        <h3>特朗普发出10天通牒</h3>
+                        <p>特朗普表示给伊朗10天时间就核计划谈判；伊朗致函联合国抗议美方威胁</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026年2月20日</div>
+                    <div class="timeline-content">
+                        <h3>美最高法院裁定关税违法</h3>
+                        <p>美国最高法院以6:3裁定特朗普政府关税措施违法</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026年2月23日</div>
+                    <div class="timeline-content">
+                        <h3>伊朗权力布局调整</h3>
+                        <p>哈梅内伊指定阿里·拉里贾尼为紧急状态下的国家事务接管人</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">2026年2月26日</div>
+                    <div class="timeline-content">
+                        <h3>美伊第三轮日内瓦谈判</h3>
+                        <p>美伊第三轮间接核谈判在日内瓦举行，被视为最后和平努力</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="summary-section">
+            <h2>形势摘要</h2>
+            <ul>
+                <li><strong>军事威胁与谈判并行</strong>：特朗普政府一边在伊朗周边部署压倒性军事力量，一边通过阿曼和日内瓦渠道进行间接谈判</li>
+                <li><strong>伊朗立场强硬</strong>：尽管面临军事威胁，伊朗最高层始终拒绝让步，并做好最坏准备</li>
+                <li><strong>最高法院裁决影响</strong>：美国内部分权制衡显现，最高法院裁定关税违法对特朗普政策形成制约</li>
+                <li><strong>关键节点</strong>：2月26日的日内瓦谈判被认为是避免军事冲突的最后机会</li>
+                <li><strong>国际关注</strong>：以色列地区局势、俄乌冲突背景下的美俄互动都影响着美伊局势走向</li>
+            </ul>
+        </section>
+        
+        <footer>
+            <p>数据更新时间：2026年2月26日</p>
+        </footer>
+    </div>
+</body>
+</html>

@@ -73,3 +73,6 @@ data/
 *.csv
 *.json
 !package.json
+
+douyin-transcript/
+douyin-transcript.tar.gz

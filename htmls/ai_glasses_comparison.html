@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI眼镜巅峰对决 | 2025智能眼镜横评</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/framer-motion/11.0.3/framer-motion.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: #0a0a0f;
+            color: #fff;
+            overflow-x: hidden;
+        }
+        
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #00f5ff, #ff00ff, #00f5ff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 3s ease infinite;
+        }
+        
+        @keyframes gradient-shift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        
+        .glow-cyan {
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.5), 0 0 60px rgba(0, 245, 255, 0.3);
+        }
+        
+        .glow-purple {
+            box-shadow: 0 0 30px rgba(168, 85, 247, 0.5), 0 0 60px rgba(168, 85, 247, 0.3);
+        }
+        
+        .glow-pink {
+            box-shadow: 0 0 30px rgba(236, 72, 153, 0.5), 0 0 60px rgba(236, 72, 153, 0.3);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: auto;
+            gap: 20px;
+            padding: 40px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        .bento-item {
+            border-radius: 24px;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        
+        .bento-item:hover {
+            transform: translateY(-8px) scale(1.02);
+        }
+        
+        .hero-card {
+            grid-column: span 4;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0,245,255,0.1) 0%, transparent 50%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .product-card {
+            grid-column: span 1;
+            min-height: 500px;
+            position: relative;
+        }
+        
+        .meta-card { background: linear-gradient(145deg, #1e3a5f 0%, #0d1b2a 100%); }
+        .xiaomi-card { background: linear-gradient(145deg, #ff6b35 0%, #f7931e 100%); }
+        .thunder-card { background: linear-gradient(145deg, #667eea 0%, #764ba2 100%); }
+        .shajike-card { background: linear-gradient(145deg, #11998e 0%, #38ef7d 100%); }
+        
+        .stat-ring {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 8px solid rgba(255,255,255,0.2);
+            border-top-color: #00f5ff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .compare-table {
+            grid-column: span 4;
+        }
+        
+        .pulse-dot {
+            width: 10px;
+            height: 10px;
+            background: #00f5ff;
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+        
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #00f5ff, #a855f7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .scroll-indicator:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(0, 245, 255, 0.6);
+        }
+        
+        @media (max-width: 1200px) {
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .hero-card, .compare-table {
+                grid-column: span 2;
+            }
+            .product-card {
+                grid-column: span 1;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            .hero-card, .product-card, .compare-table {
+                grid-column: span 1;
+            }
+        }
+        
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00f5ff, transparent);
+            animation: scan 2s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="bento-grid">
+        <!-- Hero Section -->
+        <div class="bento-item hero-card glass-card glow-cyan" id="hero">
+            <div class="scan-line"></div>
+            <div class="relative z-10 p-12 h-full flex flex-col justify-center items-center text-center">
+                <motion.div 
+                    initial={{ opacity: 0, y: 50 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8 }}
+                >
+                    <div class="flex items-center gap-4 mb-6">
+                        <span class="pulse-dot"></span>
+                        <span class="text-cyan-400 font-orbitron text-sm tracking-widest">2025 AI GLASSES COMPARISON</span>
+                        <span class="pulse-dot"></span>
+                    </div>
+                    <h1 class="font-orbitron text-6xl md:text-8xl font-black mb-6 gradient-text">AI眼镜巅峰对决</h1>
+                    <p class="text-xl md:text-2xl text-gray-300 max-w-3xl mb-8">
+                        探索当前最前沿的智能眼镜产品，从Meta到小米，从雷鸟到闪极<br>
+                        <span class="text-cyan-400">全面对比分析，帮你找到最适合的AI伴侣</span>
+                    </p>
+                    <div class="flex gap-6 justify-center flex-wrap">
+                        <div class="glass-card px-6 py-3 rounded-full">
+                            <span class="text-3xl font-orbitron font-bold text-cyan-400">4</span>
+                            <span class="text-gray-400 ml-2">款旗舰产品</span>
+                        </div>
+                        <div class="glass-card px-6 py-3 rounded-full">
+                            <span class="text-3xl font-orbitron font-bold text-purple-400">12+</span>
+                            <span class="text-gray-400 ml-2">项核心参数</span>
+                        </div>
+                        <div class="glass-card px-6 py-3 rounded-full">
+                            <span class="text-3xl font-orbitron font-bold text-pink-400">100%</span>
+                            <span class="text-gray-400 ml-2">深度测评</span>
+                        </div>
+                    </div>
+                </motion.div>
+            </div>
+        </div>
+
+        <!-- Ray-Ban Meta -->
+        <div class="bento-item product-card meta-card" id="meta">
+            <motion.div 
+                initial={{ opacity: 0, rotateY: -90 }}
+                whileInView={{ opacity: 1, rotateY: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                viewport={{ once: true }}
+                className="h-full p-8 flex flex-col"
+            >
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+                        <i class="fab fa-meta text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-orbitron text-2xl font-bold">Ray-Ban Meta</h3>
+                        <p class="text-sm text-white/70">Meta × 雷朋 联名</p>
+                    </div>
+                </div>
+                
+                <div class="flex-1">
+                    <div class="glass-card rounded-2xl p-6 mb-6">
+                        <p class="text-lg font-bold text-white/90 mb-2">$299 起</p>
+                        <p class="text-sm text-white/60">全球销量第一的AI眼镜</p>
+                        <div class="mt-4 flex gap-2">
+                            <span class="px-3 py-1 bg-green-500/30 text-green-300 rounded-full text-xs">Instagram爆火</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">12MP超广角镜头</p>
+                                <p class="text-xs text-white/60">支持1080P视频录制</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-microphone"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">五麦克风阵列</p>
+                                <p class="text-xs text-white/60">清晰语音通话</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">Meta AI助手</p>
+                                <p class="text-xs text-white/60">实时语音交互</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">续航4小时</p>
+                                <p class="text-xs text-white/60">含充电盒36小时</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 glass-card rounded-2xl p-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-white/70">综合评分</span>
+                        <span class="font-orbitron text-3xl font-bold text-cyan-400">9.2</span>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- Xiaomi AI -->
+        <div class="bento-item product-card xiaomi-card" id="xiaomi">
+            <motion.div 
+                initial={{ opacity: 0, rotateY: -90 }}
+                whileInView={{ opacity: 1, rotateY: 0 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="h-full p-8 flex flex-col"
+            >
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-robot text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-orbitron text-2xl font-bold">小米AI眼镜</h3>
+                        <p class="text-sm text-white/70">国产自研旗舰</p>
+                    </div>
+                </div>
+                
+                <div class="flex-1">
+                    <div class="glass-card rounded-2xl p-6 mb-6">
+                        <p class="text-lg font-bold text-white/90 mb-2">¥2399</p>
+                        <p class="text-sm text-white/60">小米生态深度整合</p>
+                        <div class="mt-4 flex gap-2">
+                            <span class="px-3 py-1 bg-orange-500/30 text-orange-300 rounded-full text-xs">双芯片</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">索尼IMX681</p>
+                                <p class="text-xs text-white/60">玻璃镜头模组</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">高通AR1 + 恒玄BES2700</p>
+                                <p class="text-xs text-white/60">双芯片架构</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-robot"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">MiLM + 小爱同学</p>
+                                <p class="text-xs text-white/60">自研大模型</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-battery-full"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">续航8.6小时</p>
+                                <p class="text-xs text-white/60">业界领先</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 glass-card rounded-2xl p-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-white/70">综合评分</span>
+                        <span class="font-orbitron text-3xl font-bold text-orange-400">8.8</span>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- Thunder V3 -->
+        <div class="bento-item product-card thunder-card" id="thunder">
+            <motion.div 
+                initial={{ opacity: 0, rotateY: -90 }}
+                whileInView={{ opacity: 1, rotateY: 0 }}
+                transition={{ duration: 0.8, delay: 0.3 }}
+                viewport={{ once: true }}
+                className="h-full p-8 flex flex-col"
+            >
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center">
+                        <i class="fas fa-bolt text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-orbitron text-2xl font-bold">雷鸟V3</h3>
+                        <p class="text-sm text-white/70">阿里通义加持</p>
+                    </div>
+                </div>
+                
+                <div class="flex-1">
+                    <div class="glass-card rounded-2xl p-6 mb-6">
+                        <p class="text-lg font-bold text-white/90 mb-2">¥1899</p>
+                        <p class="text-sm text-white/60">AI眼镜性价比之王</p>
+                        <div class="mt-4 flex gap-2">
+                            <span class="px-3 py-1 bg-purple-500/30 text-purple-300 rounded-full text-xs">TOP1推荐</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">索尼IMX681</p>
+                                <p class="text-xs text-white/60">定制5P镜片</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-microchip"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">高通AR1 Gen1</p>
+                                <p class="text-xs text-white/60">旗舰芯片</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-language"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">阿里通义大模型</p>
+                                <p class="text-xs text-white/60">实时翻译</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-charging-station"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">续航7小时</p>
+                                <p class="text-xs text-white/60">充电盒30小时+</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 glass-card rounded-2xl p-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-white/70">综合评分</span>
+                        <span class="font-orbitron text-3xl font-bold text-purple-400">9.0</span>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- Shajike AI -->
+        <div class="bento-item product-card shajike-card" id="shajike">
+            <motion.div 
+                initial={{ opacity: 0, rotateY: -90 }}
+                whileInView={{ opacity: 1, rotateY: 0 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+                viewport={{ once: true }}
+                className="h-full p-8 flex flex-col"
+            >
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-content">
+                        <i class="fas fa-gem text-3xl"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-orbitron text-2xl font-bold">闪极AI眼镜</h3>
+                        <p class="text-sm text-white/70">国产新锐</p>
+                    </div>
+                </div>
+                
+                <div class="flex-1">
+                    <div class="glass-card rounded-2xl p-6 mb-6">
+                        <p class="text-lg font-bold text-white/90 mb-2">¥1599</p>
+                        <p class="text-sm text-white/60">AI+拍摄+记忆三位一体</p>
+                        <div class="mt-4 flex gap-2">
+                            <span class="px-3 py-1 bg-teal-500/30 text-teal-300 rounded-full text-xs">创新设计</span>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">双摄系统</p>
+                                <p class="text-xs text-white/60">支持拍照录像</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-memory"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">128GB存储</p>
+                                <p class="text-xs text-white/60">本地存储</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-record-vinyl"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">云端+本地双存储</p>
+                                <p class="text-xs text-white/60">记忆功能</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-4">
+                            <div class="feature-icon bg-white/20">
+                                <i class="fas fa-sync"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">AI大模型接入</p>
+                                <p class="text-xs text-white/60">多模型支持</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-6 glass-card rounded-2xl p-4">
+                    <div class="flex justify-between items-center">
+                        <span class="text-sm text-white/70">综合评分</span>
+                        <span class="font-orbitron text-3xl font-bold text-green-400">8.5</span>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="bento-item compare-table glass-card" id="compare">
+            <motion.div 
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+                className="p-8"
+            >
+                <div class="text-center mb-10">
+                    <h2 class="font-orbitron text-4xl font-bold gradient-text mb-4">核心参数对比</h2>
+                    <p class="text-gray-400">全方位对比，帮你做出明智选择</p>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="border-b border-white/10">
+                                <th class="p-4 text-gray-400 font-normal">参数</th>
+                                <th class="p-4 text-center">
+                                    <div class="flex flex-col items-center">
+                                        <i class="fab fa-meta text-2xl text-cyan-400 mb-2"></i>
+                                        <span class="text-cyan-400 font-bold">Ray-Ban Meta</span>
+                                    </div>
+                                </th>
+                                <th class="p-4 text-center">
+                                    <div class="flex flex-col items-center">
+                                        <i class="fas fa-robot text-2xl text-orange-400 mb-2"></i>
+                                        <span class="text-orange-400 font-bold">小米AI眼镜</span>
+                                    </div>
+                                </th>
+                                <th class="p-4 text-center">
+                                    <div class="flex flex-col items-center">
+                                        <i class="fas fa-bolt text-2xl text-purple-400 mb-2"></i>
+                                        <span class="text-purple-400 font-bold">雷鸟V3</span>
+                                    </div>
+                                </th>
+                                <th class="p-4 text-center">
+                                    <div class="flex flex-col items-center">
+                                        <i class="fas fa-gem text-2xl text-green-400 mb-2"></i>
+                                        <span class="text-green-400 font-bold">闪极AI</span>
+                                    </div>
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                                <td class="p-4 font-bold">价格</td>
+                                <td class="p-4 text-center text-cyan-400">$299 (~¥2200)</td>
+                                <td class="p-4 text-center text-orange-400">¥2399</td>
+                                <td class="p-4 text-center text-purple-400">¥1899</td>
+                                <td class="p-4 text-center text-green-400">¥1599</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                                <td class="p-4 font-bold">摄像头</td>
+                                <td class="p-4 text-center">12MP</td>
+                                <td class="p-4 text-center">索尼IMX681</td>
+                                <td class="p-4 text-center">索尼IMX681</td>
+                                <td class="p-4 text-center">双摄</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                                <td class="p-4 font-bold">处理器</td>
+                                <td class="p-4 text-center">高通AR1</td>
+                                <td class="p-4 text-center">高通AR1 + 恒玄</td>
+                                <td class="p-4 text-center">高通AR1 Gen1</td>
+                                <td class="p-4 text-center">旗舰芯片</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                                <td class="p-4 font-bold">AI模型</td>
+                                <td class="p-4 text-center">Meta AI</td>
+                                <td class="p-4 text-center">MiLM + 小爱</td>
+                                <td class="p-4 text-center">阿里通义</td>
+                                <td class="p-4 text-center">多模型</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                                <td class="p-4 font-bold">续航时间</td>
+                                <td class="p-4 text-center">4h / 36h盒</td>
+                                <td class="p-4 text-center">8.6h</td>
+                                <td class="p-4 text-center">7h / 30h+盒</td>
+                                <td class="p-4 text-center">持久续航</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                                <td class="p-4 font-bold">存储</td>
+                                <td class="p-4 text-center">云端</td>
+                                <td class="p-4 text-center">云端</td>
+                                <td class="p-4 text-center">云端</td>
+                                <td class="p-4 text-center">128GB本地</td>
+                            </tr>
+                            <tr class="border-b border-white/5 hover:bg-white/5 transition">
+                                <td class="p-4 font-bold">特色功能</td>
+                                <td class="p-4 text-center text-cyan-400">社交直播</td>
+                                <td class="p-4 text-center text-orange-400">生态整合</td>
+                                <td class="p-4 text-center text-purple-400">实时翻译</td>
+                                <td class="p-4 text-center text-green-400">记忆功能</td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="p-4 font-bold">推荐指数</td>
+                                <td class="p-4 text-center">
+                                    <span class="text-3xl font-orbitron font-bold text-cyan-400">9.2</span>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <span class="text-3xl font-orbitron font-bold text-orange-400">8.8</span>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <span class="text-3xl font-orbitron font-bold text-purple-400">9.0</span>
+                                </td>
+                                <td class="p-4 text-center">
+                                    <span class="text-3xl font-orbitron font-bold text-green-400">8.5</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- Winner Card -->
+        <div class="bento-item glass-card glow-purple" style="grid-column: span 2;" id="winner">
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+                className="p-10 text-center"
+            >
+                <div class="floating mb-6">
+                    <i class="fas fa-trophy text-6xl text-yellow-400"></i>
+                </div>
+                <h3 class="font-orbitron text-3xl font-bold mb-4">
+                    <span class="text-purple-400">🏆 最佳推荐</span>
+                </h3>
+                <div class="glass-card rounded-3xl p-8 inline-block">
+                    <h4 class="text-4xl font-orbitron font-black gradient-text mb-4">雷鸟V3 AI眼镜</h4>
+                    <p class="text-xl text-gray-300 mb-6">
+                        性价比之王 ¥1899<br>
+                        阿里通义大模型加持<br>
+                        实时翻译+AI下棋+超长续航
+                    </p>
+                    <div class="flex justify-center gap-4">
+                        <span class="px-4 py-2 bg-purple-500/30 text-purple-300 rounded-full">TOP1销量</span>
+                        <span class="px-4 py-2 bg-cyan-500/30 text-cyan-300 rounded-full">性价比极高</span>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- Best for Card -->
+        <div class="bento-item glass-card glow-pink" style="grid-column: span 2;" id="bestfor">
+            <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true }}
+                className="p-10"
+            >
+                <h3 class="font-orbitron text-2xl font-bold mb-6 text-center">
+                    <span class="text-pink-400">🎯 适用场景推荐</span>
+                </h3>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="glass-card rounded-2xl p-4 text-center">
+                        <i class="fab fa-instagram text-3xl text-pink-400 mb-2"></i>
+                        <p class="font-bold">社交达人</p>
+                        <p class="text-sm text-gray-400">Ray-Ban Meta</p>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4 text-center">
+                        <i class="fas fa-home text-3xl text-orange-400 mb-2"></i>
+                        <p class="font-bold">小米生态用户</p>
+                        <p class="text-sm text-gray-400">小米AI眼镜</p>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4 text-center">
+                        <i class="fas fa-plane text-3xl text-purple-400 mb-2"></i>
+                        <p class="font-bold">旅行爱好者</p>
+                        <p class="text-sm text-gray-400">雷鸟V3</p>
+                    </div>
+                    <div class="glass-card rounded-2xl p-4 text-center">
+                        <i class="fas fa-memory text-3xl text-green-400 mb-2"></i>
+                        <p class="font-bold">本地存储刚需</p>
+                        <p class="text-sm text-gray-400">闪极AI眼镜</p>
+                    </div>
+                </div>
+            </motion.div>
+        </div>
+
+        <!-- Source Info -->
+        <div class="bento-item glass-card" style="grid-column: span 4;" id="sources">
+            <motion.div 
+                initial={{ opacity: 0 }}
+                whileInView={{ opacity: 1 }}
+                transition={{ duration: 0.8 }}
+                viewport={{ once: true }}
+                className="p-6 text-center"
+            >
+                <p class="text-gray-500 text-sm">
+                    数据来源: 
+                    <a href="https://www.sohu.com/a/930330307_121081803" target="_blank" class="text-cyan-400 hover:underline">搜狐科技</a>
+                    | 
+                    <a href="http://m.toutiao.com/group/7521342187980849710/" target="_blank" class="text-cyan-400 hover:underline">今日头条</a>
+                    | 
+                    <a href="https://www.bilibili.com/video/BV1o184zhEz9/" target="_blank" class="text-cyan-400 hover:underline">哔哩哔哩</a>
+                    | 
+                    <a href="http://m.toutiao.com/group/7461473101776437760/" target="_blank" class="text-cyan-400 hover:underline">中信建投</a>
+                </p>
+                <p class="text-gray-600 text-xs mt-2">数据截止2025年2月，仅供参考</p>
+            </motion.div>
+        </div>
+    </div>
+
+    <div class="scroll-indicator" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        <i class="fas fa-arrow-up text-white"></i>
+    </div>
+
+    <script>
+        // 滚动动画
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.bento-item').forEach(item => {
+            observer.observe(item);
+        });
+
+        // 卡片悬停效果增强
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.zIndex = '10';
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.zIndex = '1';
+            });
+        });
+
+        // 数字滚动动画
+        function animateNumber(element, target, duration = 2000) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= target) {
+                    clearInterval(timer);
+                    element.textContent = target;
+                } else {
+                    element.textContent = Math.floor(start);
+                }
+            }, 16);
+        }
+
+        // 页面加载动画
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '1';
+        });
+
+        document.body.style.opacity = '0';
+        document.body.style.transition = 'opacity 0.5s ease';
+    </script>
+</body>
+</html>
